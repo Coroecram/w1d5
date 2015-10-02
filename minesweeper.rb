@@ -2,16 +2,17 @@
 
 class Tile
 
-  attr_accessor :flagged, :revealed
+  attr_accessor :flagged, :revealed, :index
   attr_reader :mined, :board
 
   NEIGHBOR = [[1, 0], [0, 1], [-1, 0], [0, -1], [1, 1], [-1, 1], [1, -1], [-1, -1]]
 
-  def initialize(board, mined = nil)
+  def initialize(board, index, mined = nil)
     @mined = mined
     @flagged = nil
     @revealed = false
     @board = board
+    @index = index
   end
 
   def reveal
@@ -38,9 +39,12 @@ class Board
   end
 
   def populate
-    self.each do |array|
-      array.each_with_index do |member, i|
-        array[i] = 5
+    self.each_with_index do |array, y|
+      array.each_with_index do |member, x|
+        checknum = 5
+        checkbomb = rand(30)
+        place_mine = checkbomb < checknum ? true : false
+        array[x] = Tile.new(self, [x, y], place_mine)
       end
     end
 
