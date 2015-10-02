@@ -45,16 +45,18 @@ NEIGHBOR = [[1, 0], [0, 1], [-1, 0], [0, -1], [1, 1], [-1, 1], [1, -1], [-1, -1]
     end
   end
 
-  def update(tile, prev_tile)
-    visited = [prev_tile]
+  def update(tile)
     if tile.mined
       tile.revealed = true
       tile.display = "!"
     else
       neighbor_tiles = neighbors(tile.index)
       tile.display = neighbor_bomb_count(neighbor_tiles)
+      tile.revealed = true
       neighbor_tiles.each do |tile|
-        neighbor_tiles.delete(tile) if tile.mined == true || visited.include?(tile.index)
+        if tile.mined == true || tile.revealed == true
+          neighbor_tiles.delete(tile)
+        end
       end
 
 
@@ -163,7 +165,7 @@ class Game
     if command == "r"
       tile.revealed = true
       tile.display = "_"
-      board.update(tile, tile.index)
+      board.update(tile)
     elsif command == "f"
       if tile.flagged == false
         tile.flagged = true
