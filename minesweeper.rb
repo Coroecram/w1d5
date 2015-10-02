@@ -7,7 +7,7 @@ class Tile
 
   NEIGHBOR = [[1, 0], [0, 1], [-1, 0], [0, -1], [1, 1], [-1, 1], [1, -1], [-1, -1]]
 
-  def initialize(mined = nil, board)
+  def initialize(board, mined = nil)
     @mined = mined
     @flagged = nil
     @revealed = false
@@ -33,12 +33,18 @@ end
 class Board
 
   def initialize(size = 8)
-    @grid = Array.new(size) { Array.new(size)}
+    @grid = Array.new(size) { Array.new(size) }
     @grid.populate
   end
 
   def populate
-    
+    self.each do |array|
+      array.each_with_index do |member, i|
+        array[i] = 5
+      end
+    end
+
+  end
 
 
 end
