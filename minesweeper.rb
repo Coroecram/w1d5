@@ -5,8 +5,6 @@ class Tile
   attr_accessor :flagged, :revealed, :index, :display
   attr_reader :mined, :board
 
-  NEIGHBOR = [[1, 0], [0, 1], [-1, 0], [0, -1], [1, 1], [-1, 1], [1, -1], [-1, -1]]
-
   def initialize(board, index, mined = nil)
     @mined = mined
     @flagged = false
@@ -20,19 +18,14 @@ class Tile
     self.revealed = true
   end
 
-  def neighbors(pos)
-    neighbors = []
-    NEIGHBOR.each do |i|
-      neighbors << [pos[0] + i[0], pos[1] + i[1]]
-    end
-
-    neighbors
-  end
-
 
 end
 
 class Board
+
+NEIGHBOR = [[1, 0], [0, 1], [-1, 0], [0, -1], [1, 1], [-1, 1], [1, -1], [-1, -1]]
+
+  attr_reader :grid
 
   def initialize(size = 8)
     @grid = Array.new(size) { Array.new(size) }
@@ -48,10 +41,40 @@ class Board
         array[x] = Tile.new(self, [x, y], place_mine)
       end
     end
+  end
+
+  def update(tile, prev_tile)
+    if tile.mined
+      tile.revealed = true
+      tile.display = "!!"
+    else
+      every_neighbor_tile_indices = neighbors(tile.index)
+      on_board_neighbor_indices = neighbors_on_board(every_neighbor_tile_indices)
+    end
 
   end
 
-  def update
+  def neighbors(pos)
+    neighbors = []
+    NEIGHBOR.each do |i|
+      neighbors << [pos[0] + i[0], pos[1] + i[1]]
+    end
+
+    neighbors
+  end
+
+  def neighbors_on_board(indices)
+    on_board = []
+    grid.each do |row|
+      row.each do |tile|
+        on_board << tile if indices.include?(tile.index)
+      end
+    end
+
+    on_board
+  end
+
+  def neighbor_bomb_count
 
   end
 
@@ -116,11 +139,16 @@ class Game
 
     if command == "r"
       tile.revealed = true
+      board.update(tile, tile.index)
     elsif command == "f"
-      tile.flagged == true
+      if tile.flagged == false
+        tile.flagged = true
+        tile.display = "F"
+      else
+        tile.flagged = false
+        tile.display = "*"
+      end
     end
-
-    board.update
 
     board.render
   end
