@@ -46,11 +46,17 @@ NEIGHBOR = [[1, 0], [0, 1], [-1, 0], [0, -1], [1, 1], [-1, 1], [1, -1], [-1, -1]
   end
 
   def update(tile, prev_tile)
+    visited = [prev_tile]
     if tile.mined
       tile.revealed = true
       tile.display = "!"
     else
-      neighbors(tile.index)
+      neighbor_tiles = neighbors(tile.index)
+      tile.display = neighbor_bomb_count(neighbor_tiles)
+      neighbor_tiles.each do |tile|
+        neighbor_tiles.delete(tile) if tile.mined == true || visited.include?(tile.index)
+      end
+
 
     end
 
