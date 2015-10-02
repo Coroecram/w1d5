@@ -52,3 +52,55 @@ class Board
 
 
 end
+
+class Game
+
+  attr_reader :player
+  attr_accessor :board
+
+  def initialize(player)
+    @player = player
+    @board = Board.new
+    @squares = board.grid
+  end
+
+  def run
+    until won? || lost?
+      take_turn
+      puts "#{player}, you won!" if won?
+      puts "#{player}, you lost." if lost?
+    end
+  end
+
+  # def game_over?
+  #   return true if won? || lost?
+  # end
+
+  def won?
+    squares.each do |array|
+      array.each do |member|
+        return false if member.revealed == false && member.mine == false
+      end
+    end
+    true
+  end
+
+  def lost?
+    squares.each do |array|
+      array.each do |member|
+        return true if member.revealed == true && member.mine == true
+      end
+    end
+    false
+  end
+
+  def take_turn
+    puts "Type r to reveal or f to flag."
+    command = gets.chomp
+    puts "Type the square coordinate 'x, y'"
+    coord = gets.chomp
+    if command == "r"
+  end
+
+
+end
