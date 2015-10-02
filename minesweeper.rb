@@ -2,16 +2,17 @@
 
 class Tile
 
-  attr_accessor :flagged, :revealed, :index
+  attr_accessor :flagged, :revealed, :index, :display
   attr_reader :mined, :board
 
   NEIGHBOR = [[1, 0], [0, 1], [-1, 0], [0, -1], [1, 1], [-1, 1], [1, -1], [-1, -1]]
 
   def initialize(board, index, mined = nil)
     @mined = mined
-    @flagged = nil
+    @flagged = false
     @revealed = false
     @board = board
+    @display = "*"
     @index = index
   end
 
@@ -48,6 +49,13 @@ class Board
       end
     end
 
+  end
+
+  def update
+
+  end
+
+  def render
   end
 
 
@@ -95,12 +103,29 @@ class Game
   end
 
   def take_turn
+
     puts "Type r to reveal or f to flag."
     command = gets.chomp
+
     puts "Type the square coordinate 'x, y'"
-    coord = gets.chomp
+    coord_string = gets.chomp
+    coord_array = coord_string.split(", ")
+    row = coord_array[1].to_i
+    col = coord_array[0].to_i
+    tile = board.grid[row][col]
+
     if command == "r"
+      tile.revealed = true
+    elsif command == "f"
+      tile.flagged == true
+    end
+
+    board.update
+
+    board.render
   end
+
+
 
 
 end
