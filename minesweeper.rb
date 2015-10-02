@@ -27,4 +27,18 @@ class Tile
     neighbors
   end
 
+
+end
+
+class Board
+
+  def initialize(size = 8)
+    @grid = Array.new(size) { Array.new(size)}
+    @grid.populate
+  end
+
+  def populate
+    
+
+
 end
